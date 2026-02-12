@@ -1,12 +1,19 @@
 import logger from '../utils/logger.js';
 
-export const errorHandler = (err, req, res, next) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    
-    logger.error(`${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-    
-    res.status(statusCode).json({
+export const globalErrorHandler = (err, req, res, next) => {
+    const errorDetails = {
         message: err.message,
-        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+        status: err.status || 500,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+        url: req.originalUrl,
+        method: req.method
+    };
+
+    logger.error(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Error: ${err.message}`);
+
+    res.status(errorDetails.status).json({
+        status: 'error',
+        message: errorDetails.message,
+        ...(errorDetails.stack && { stack: errorDetails.stack })
     });
 };
