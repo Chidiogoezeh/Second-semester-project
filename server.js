@@ -13,7 +13,13 @@ app.use(express.json());
 
 // Root endpoint
 app.get('/', (req, res) => {
-    res.send('Altsch Second Semester Project API is Running!');
+    res.status(200).json({
+        message: "Altsch Second Semester Project API is Running!",
+        endpoints: {
+            auth: "/auth",
+            blogs: "/blogs"
+        }
+    });
 });
 
 // Routes
