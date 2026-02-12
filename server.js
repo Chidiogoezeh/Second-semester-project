@@ -8,6 +8,10 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('Altsch Second Semester Project API is Running!');
+});
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/blogs', blogRoutes);
